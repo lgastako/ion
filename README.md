@@ -45,6 +45,9 @@ an atom at this point.
 
 #### Create an ion with a transmogrifier
 
+A (ever so slightly) more interesting example would be an ion that increment's
+it's value before storing it:
+
 ```clojure
 (def ion (ionize 2 :transmogrifier inc))
 
@@ -58,6 +61,10 @@ an atom at this point.
 
 @ion ;; => 6
 ```
+
+A more real world example might be a `ion` that has a map as a value and which
+creates or updates new keys in the map containing denormalized or transformed
+projections of the keys that the user is swapping it.
 
 #### Manipulate ions like atoms
 
