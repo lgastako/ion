@@ -1,20 +1,26 @@
 (ns ion.core
-  (:import [clojure.lang IDeref IObj])
-  (:refer-clojure :exclude [reset! swap!]))
+  (:import [clojure.lang IAtom IDeref IObj]))
 
 (defprotocol MonatomicIon
-  (reset! [this val])
-  (swap! [this f & args])
   (underlying-atom [this]))
 
 (deftype Ion [a transmogrify]
   IDeref
   (deref [this] @a)
-  MonatomicIon
+  IAtom
+  (compare-and-set! [_ old new]
+    (compare-and-set! a old new))
   (reset! [_ val]
-    (apply clojure.core/reset! a (transmogrify val)))
-  (swap! [_ f & args]
-    (apply clojure.core/swap! a (comp transmogrify f) args))
+    (reset! a (transmogrify val)))
+  (swap! [_ f]
+    (swap! a (comp transmogrify f)))
+  (swap! [_ f x]
+    (swap! a (comp transmogrify f) x))
+  (swap! [_ f x y]
+    (swap! a (comp transmogrify f) x y))
+  (swap! [_ f x y args]
+    (apply swap! a (comp transmogrify f) x y args))
+  MonatomicIon
   (underlying-atom [this] a)
   IObj
   (meta [_] (meta a)))
