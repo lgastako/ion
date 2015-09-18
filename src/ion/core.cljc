@@ -7,16 +7,14 @@
   (swap! [this f & args])
   (underlying-atom [this]))
 
-(deftype Ion [a reset!-transmogrifier swap!-transmogrifier]
+(deftype Ion [a transmogrify]
   IDeref
   (deref [this] @a)
   MonatomicIon
   (reset! [_ val]
-    (letfn [(f [x] (apply (or reset!-transmogrifier identity) x))]
-      (apply clojure.core/reset! (f val))))
+    (apply clojure.core/reset! a (transmogrify val)))
   (swap! [_ f & args]
-    (let [f (apply (-> a swap!-transmogrifier (or identity)) f)]
-      (apply clojure.core/swap! a f args)))
+    (apply clojure.core/swap! a (comp transmogrify f) args))
   (underlying-atom [this] a)
   IObj
   (meta [_] (meta a)))
@@ -25,14 +23,10 @@
   ([] (ionize nil))
   ([x & opts]
    (let [opts (apply hash-map opts)
-         reset!-transmogrifier (:reset!-transmogrifier! opts)
-         swap!-transmogrifier (:swap!-transmogrifier! opts)
-         opts (flatten (into [] (dissoc opts
-                                        :reset!-transmogrifier!
-                                        :swap!-transmogrifier!)))]
-     (-> (apply atom x opts)
-         (Ion. (or (:reset!-transmogrifier opts) identity)
-               (or (:swap!-transmogrifier! opts) identity))))))
+         transmogrify (or (:transmogrifier opts) identity)
+         opts (flatten (into [] (dissoc opts :transmogrifier)))
+         a (apply atom (transmogrify x) opts)]
+     (Ion. a transmogrify))))
 
 (defn ion?
   "Return true if x implements "

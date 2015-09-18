@@ -31,8 +31,8 @@
     (is (= @(ionize {:foo :bar})
            (deref (ionize {:foo :bar})))))
   (testing "resetable?"
-    (is (= :bar (reset! (ionize :foo))))
-    (is (= 2 (reset! (ionize 2 :validator even?))))))
+    (is (= :bar (reset! (ionize :foo) :bar)))
+    (is (= 4 (reset! (ionize 2 :validator even?) 4)))))
 
 (run-tests)
 
