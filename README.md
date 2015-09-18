@@ -1,8 +1,8 @@
 # ion
 
 This library provides ions which are wrappers around Clojure atoms that attempt
-to expose an interface identical to Clojure's atoms with the addition a
-transmogrification functions that provide the ability to transmogrify the
+to expose an interface identical to atoms with the addition of a
+transmogrification function that provides the ability to transmogrify the
 values that are `reset!` or `swap!`'d into the ion.
 
 The ions produced by this library are all monatomic.
@@ -27,7 +27,7 @@ or in a REPL:
 ### Create an ion
 
 The `ionize` fn is identical to clojure's built in `atom` function except that
-it defaults to nil if no value is supplied and it takes two additional options:
+it defaults to nil if no value is supplied and it takes one additional option:
 
 The `transmogrifier` option should should be nil or a side-effect free fn of
 one argument, which will be passed the value that was is about to be `reset!`
@@ -40,12 +40,8 @@ one argument, which will be passed the value that was is about to be `reset!`
 (def ion (ionize))
 ```
 
-Since we didn't supply a transmogrifier this ion is essentially equivalent to
-this atom at this point:
-
-```clojure
-(def ion (atom nil))
-```
+Since we didn't supply a transmogrifier this ion will behave identically to
+an atom at this point.
 
 #### Create an ion with a transmogrifier
 
@@ -86,14 +82,14 @@ When a validator is used with a transmogrifier, the validator applies to the
 transmogrified version of the value, not the pre-transmogrified version:
 
 ```clojure
-(def ion (ionize 0 :tranmogrifier inc
+(def ion (ionize 0 :transmogrifier inc
                    :validator odd?))
 
 @ion  ;; => 1
 
 (swap! ion identity)  ;; fails validation because the value gets bumped to 2 which is not odd
 
-(swap! ion inc)  ;; => 3  (succeeds because it's inc'd one by swap! and once by tranmogrifier)
+(swap! ion inc)  ;; => 3  (succeeds because it's inc'd one by swap! and once by transmogrifier)
 
 (def ion (ionize 0 :meta {:foo :bar}))
 
