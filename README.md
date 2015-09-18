@@ -82,9 +82,24 @@ this atom at this point:
 You can also supply `:validator` and `:meta` options at construction time like
 with atoms:
 
+When a validator is used with a transmogrifier, the validator applies to the
+transmogrified version of the value, not the pre-transmogrified version:
+
 ```clojure
-(def ion (ionize
+(def ion (ionize 0 :tranmogrifier inc
+                   :validator odd?))
+
+@ion  ;; => 1
+
+(swap! ion identity)  ;; fails validation because the value gets bumped to 2 which is not odd
+
+(swap! ion inc)  ;; => 3  (succeeds because it's inc'd one by swap! and once by tranmogrifier)
+
+(def ion (ionize 0 :meta {:foo :bar}))
+
+(meta ion)  ;; => {:foo :bar}
 ```
+
 
 #### Check to see if something is an ion
 
