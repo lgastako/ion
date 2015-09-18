@@ -34,7 +34,7 @@ one argument, which will be passed the value that was is about to be `reset!`
 (or `swap!`'d) into the ion and which should return a value which will be
 `reset!` (or `swap!`'d) into the ion instead.
 
-#### Creating an empty ion with no transmogrifiers
+#### Create an empty ion with no transmogrifiers
 
 ```clojure
 (def ion (ionize))
@@ -47,10 +47,10 @@ this atom at this point:
 (def ion (atom nil))
 ```
 
-### Creating an ion with a transmogrifier
+#### Create an ion with a transmogrifier
 
 ```clojure
-(def ion (ionize 2 :tranmogrifier inc))
+(def ion (ionize 2 :transmogrifier inc))
 
 @ion  ;; => 3
 
@@ -63,7 +63,7 @@ this atom at this point:
 @ion ;; => 6
 ```
 
-### Manipulate ions like atoms
+#### Manipulate ions like atoms
 
 ```clojure
 (def ionize (ionize))
@@ -86,7 +86,7 @@ with atoms:
 (def ion (ionize
 ```
 
-### Check to see if something is an ion
+#### Check to see if something is an ion
 
 ```clojure
 (ion? (ionize)) ;; => true
