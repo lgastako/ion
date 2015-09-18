@@ -1,5 +1,7 @@
 (ns ion.core
-  (:import [clojure.lang IAtom IDeref IObj]))
+  (:import (clojure.lang IAtom
+                         IDeref
+                         IObj)))
 
 (defprotocol MonatomicIon
   (underlying-atom [this]))
@@ -8,17 +10,17 @@
   IDeref
   (deref [this] @a)
   IAtom
-  (compare-and-set! [_ old new]
+  (compareAndSet [_ old new]
     (compare-and-set! a old new))
-  (reset! [_ val]
+  (reset [_ val]
     (reset! a (transmogrify val)))
-  (swap! [_ f]
+  (swap [_ f]
     (swap! a (comp transmogrify f)))
-  (swap! [_ f x]
+  (swap [_ f x]
     (swap! a (comp transmogrify f) x))
-  (swap! [_ f x y]
+  (swap [_ f x y]
     (swap! a (comp transmogrify f) x y))
-  (swap! [_ f x y args]
+  (swap [_ f x y args]
     (apply swap! a (comp transmogrify f) x y args))
   MonatomicIon
   (underlying-atom [this] a)

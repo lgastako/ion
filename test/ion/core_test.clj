@@ -1,5 +1,4 @@
 (ns ion.core-test
-  (:refer-clojure :exclude [reset! swap!])
   (:require [clojure.test :refer :all]
             [ion.core :refer :all]))
 
