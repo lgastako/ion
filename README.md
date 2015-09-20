@@ -98,9 +98,7 @@ transmogrified version of the value, not the pre-transmogrified version:
 
 (swap! ion inc)  ;; => 3  (succeeds because it's inc'd one by swap! and once by transmogrifier)
 
-(def ion (ionize 0 :meta {:foo :bar}))
-
-(meta ion)  ;; => {:foo :bar}
+(meta (ionize 0 :meta {:foo :bar}))  ;; => {:foo :bar}
 ```
 
 
